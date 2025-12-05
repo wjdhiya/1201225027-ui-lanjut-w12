@@ -1,5 +1,5 @@
 <template>
   <footer class="footer">
-    <small>2025 My Vue App - Belajar itu Seru</small>
+    <small>🖤 1201225027 - Week 12 - A To Do List & Focus App 🖤</small>
   </footer>
 </template>

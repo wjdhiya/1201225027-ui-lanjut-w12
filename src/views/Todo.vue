@@ -13,7 +13,6 @@
 
   <div class="actions" style="margin:0.5rem 0;">
     <button @click="markAllCompleted">Mark all completed</button>
-    <button @click="removeAllCompleted">Remove all completed</button>
     <button @click="undo" :disabled="!hasHistory">Undo</button>
   </div>
 
@@ -27,12 +26,13 @@
         @dragstart="onDragStart($event, element.id)"
         @dragover.prevent="onDragOver($event, index)"
         @drop="onDrop($event, index)"
-        style="display:flex; gap:0.5rem; align-items:center; padding:0.25rem 0; cursor:grab; background:#fff;"
+        style="display:flex; gap:0.5rem; align-items:center; padding:0.5rem; cursor:grab; background:transparent; border:1px solid #e6e6e6; border-radius:6px;"
       >
         <span>[{{ element.priority }}]</span>
         <span style="flex:1">{{ element.text }}</span>
         <button @click.prevent="updateTodo({ ...element, isCompleted: true })">✅</button>
         <button @click.prevent="destroyTodo(element.id)">❌</button>
+        <button @click.prevent="focusTodo(element.id)">Add To Focus</button> 
       </li>
     </ul>
   </div>
@@ -69,7 +69,8 @@ export default {
       'reorderTodosByIds',
       'removeAllCompleted',
       'markAllCompleted',
-      'undo'
+      'undo',
+      'setFocus' 
     ]),
 
     onAdd() {
@@ -82,7 +83,7 @@ export default {
     onDragStart(event, id) {
       this.draggingId = id
       event.dataTransfer.effectAllowed = 'move'
-      try { event.dataTransfer.setData('text/plain', String(id)) } catch (e) { /* Safari */ }
+      try { event.dataTransfer.setData('text/plain', String(id)) } catch (e) { }
     },
 
     onDragOver(event, index) {
@@ -106,7 +107,12 @@ export default {
 
       this.draggingId = null
       this.dragOverIndex = null
-    }
+    },
+
+    focusTodo(id) {
+      this.setFocus(id)
+      this.$router.push({ name: 'Focus', params: { id: String(id) } }).catch(()=>{})
+    },
   }
 }
 </script>
